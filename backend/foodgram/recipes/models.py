@@ -5,17 +5,17 @@ from users.models import User
 class Tag(models.Model):
     """Модель тегов."""
 
-    name = models.CharField(max_length=200,
-                            verbose_name='Название',
+    name = models.CharField('Название',
+                            max_length=200,
                             unique=True)
-    color = models.CharField(max_length=7,
-                             verbose_name='Цвет в HEX',
+    color = models.CharField('Цвет в HEX',
+                             max_length=7,
                              default='null',
                              unique=True)
-    slug = models.SlugField(max_length=200,
+    slug = models.SlugField('Уникальный слаг',
+                            max_length=200,
                             unique=True,
-                            default='null',
-                            verbose_name='Уникальный слаг')
+                            default='null')
 
     class Meta:
         verbose_name = 'тег'
@@ -28,11 +28,11 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     """Модель ингредиентов."""
 
-    name = models.CharField(max_length=200,
-                            verbose_name='Название',
+    name = models.CharField('Название',
+                            max_length=200,
                             unique=True)
-    measurement_unit = models.CharField(max_length=200,
-                                        verbose_name='Единица измерения')
+    measurement_unit = models.CharField('Единица измерения',
+                                        max_length=200)
 
     class Meta:
         verbose_name = 'ингредиент'
@@ -55,18 +55,18 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient,
                                          verbose_name='Ингредиенты',
                                          through='IngredientRecipe')
-    is_favorited = models.BooleanField(default=False,
-                                       verbose_name='Избранное')
-    is_in_shopping_cart = models.BooleanField(default=False,
-                                              verbose_name='Корзина')
-    name = models.CharField(max_length=200,
-                            verbose_name='Название блюда')
-    image = models.ImageField(verbose_name='Фото блюда',
-                              upload_to='recipes/',
+    is_favorited = models.BooleanField('Избранное',
+                                       default=False)
+    is_in_shopping_cart = models.BooleanField('Корзина',
+                                              default=False)
+    name = models.CharField('Название блюда',
+                            max_length=200)
+    image = models.ImageField('Фото блюда',
+                              upload_to='media/',
                               blank=True)
-    text = models.TextField(verbose_name='Описание')
+    text = models.TextField('Описание')
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время приготовления (мин)')
+        'Время приготовления (мин)')
 
     class Meta:
         verbose_name = 'рецепт'
@@ -99,7 +99,7 @@ class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(Ingredient,
                                    related_name='ingredient_recipe',
                                    on_delete=models.CASCADE)
-    amount = models.PositiveSmallIntegerField(verbose_name='Количество')
+    amount = models.PositiveSmallIntegerField('Количество')
 
     class Meta:
         constraints = [
@@ -141,22 +141,17 @@ class Favorite(models.Model):
 
 
 class ShoppingCart(models.Model):
-    """
-    Список покупок пользователя.
-    Ограничения уникальности полей:
-      author, recipe.
-    """
-    user = models.ForeignKey(
-        User,
-        related_name='shopping_cart',
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь')
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name='shopping_cart',
-        verbose_name='Рецепт для приготовления',
-        on_delete=models.CASCADE,
-        help_text='Выберите рецепт для приготовления')
+    """Список покупок пользователя."""
+
+    user = models.ForeignKey(User,
+                             related_name='shopping_cart',
+                             on_delete=models.CASCADE,
+                             verbose_name='Пользователь')
+    recipe = models.ForeignKey(Recipe,
+                               related_name='shopping_cart',
+                               verbose_name='Рецепт для приготовления',
+                               on_delete=models.CASCADE,
+                               help_text='Выберите рецепт для приготовления')
 
     class Meta:
         verbose_name = 'Список покупок'

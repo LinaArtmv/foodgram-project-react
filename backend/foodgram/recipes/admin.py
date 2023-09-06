@@ -4,55 +4,46 @@ from .models import (Favorite, Ingredient, IngredientRecipe,
 
 
 class IngredientsInline(admin.TabularInline):
-    """
-    Админ-зона для интеграции добавления ингридиентов в рецепты.
-    Сразу доступно добавление 3х ингрдиентов.
-    """
+    """Админ-зона для добавления ингредиентов в рецепты."""
+
     model = IngredientRecipe
     extra = 3
 
 
 class TagsInline(admin.TabularInline):
-    """
-    Админ-зона для интеграции добавления ингридиентов в рецепты.
-    Сразу доступно добавление 3х ингрдиентов.
-    """
+    """Админ-зона для добавления тегов в рецепты."""
+
     model = TagRecipe
     extra = 3
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    """
-    Админ-зона избранных рецептов.
-    """
+    """Админ-зона избранных рецептов."""
+
     list_display = ('user', 'recipe')
     list_filter = ('user',)
     search_fields = ('user',)
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-    """
-    Админ-зона покупок.
-    """
+    """Админ-зона списка покупок."""
+
     list_display = ('user', 'recipe')
     list_filter = ('user',)
     search_fields = ('user',)
 
 
 class IngredientRecipeAdmin(admin.ModelAdmin):
-    """
-    Админ-зона ингридентов для рецептов.
-    """
+    """Админ-зона ингредиентов для рецептов."""
+
     list_display = ('id', 'recipe', 'ingredient', 'amount',)
     list_filter = ('recipe', 'ingredient')
     search_fields = ('name',)
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    """
-    Админ-зона рецептов.
-    Добавлен просмотр кол-ва добавленных рецептов в избранное.
-    """
+    """Админ-зона рецептов."""
+
     list_display = ('id', 'author', 'name')
     search_fields = ('name',)
     list_filter = ('author', 'name', 'tags')
@@ -68,18 +59,16 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    """
-    Админ-зона тегов.
-    """
+    """Админ-зона тегов."""
+
     list_display = ('id', 'name', 'slug', 'color')
     list_filter = ('name',)
     search_fields = ('name',)
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    """
-    Админ-зона ингридиентов.
-    """
+    """Админ-зона ингридиентов."""
+
     list_display = ('name', 'measurement_unit')
     list_filter = ('name',)
     search_fields = ('name',)

@@ -3,38 +3,20 @@ from django.db import models
 
 
 class User(AbstractUser):
-    email = models.EmailField(
-        'Электронная почта',
-        max_length=254,
-        unique=True,
-        blank=False,
-        null=False,
-    )
-    username = models.CharField(
-        'Имя пользователя',
-        max_length=150,
-        unique=True,
-        blank=False,
-        null=False,
-    )
-    first_name = models.CharField(
-        'Имя',
-        max_length=150,
-        blank=False,
-        null=False,
-    )
-    last_name = models.CharField(
-        'Фамилия',
-        max_length=150,
-        blank=False,
-        null=False
-    )
-    password = models.CharField(
-        'Пароль',
-        max_length=150,
-        blank=False,
-        null=False,
-    )
+    """Переопределение базовой модели User."""
+
+    email = models.EmailField('Электронная почта',
+                              max_length=254,
+                              unique=True)
+    username = models.CharField('Имя пользователя',
+                                max_length=150,
+                                unique=True)
+    first_name = models.CharField('Имя',
+                                  max_length=150)
+    last_name = models.CharField('Фамилия',
+                                 max_length=150)
+    password = models.CharField('Пароль',
+                                max_length=150)
 
     class Meta:
         ordering = ['id']
@@ -46,18 +28,16 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follower',
-        verbose_name='Пользователь',
-    )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='following',
-        verbose_name='Автор',
-    )
+    """Модель подписок на автора."""
+
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='follower',
+                             verbose_name='Пользователь')
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='following',
+                               verbose_name='Автор')
 
     class Meta:
         constraints = [

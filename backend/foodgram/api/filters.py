@@ -1,9 +1,10 @@
 from django_filters.rest_framework import filters, FilterSet
-
 from recipes.models import Ingredient, Recipe, Tag
 
 
 class RecipeFilter(FilterSet):
+    """Фильтрация рецептов."""
+
     tags = filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all(),
                                              field_name='tags__slug',
                                              to_field_name='slug')
@@ -27,6 +28,8 @@ class RecipeFilter(FilterSet):
 
 
 class IngredientFilter(FilterSet):
+    """Поиск ингредиентов."""
+
     name = filters.CharFilter(lookup_expr='istartswith')
 
     class Meta:

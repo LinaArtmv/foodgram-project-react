@@ -2,11 +2,9 @@ from rest_framework import permissions
 
 
 class IsOwnerOrAdminOrReadOnly(permissions.BasePermission):
-    """
-    Неавторизованным пользователям разрешён только просмотр.
-    Если пользователь является администратором
-    или автор рецепта, то возможны остальные методы.
-    """
+    """Неавторизованным пользователям разрешён только просмотр.
+    Администратору и автору разрешены остальные методы."""
+
     def has_permission(self, request, view):
         return (request.method in permissions.SAFE_METHODS
                 or request.user.is_authenticated)

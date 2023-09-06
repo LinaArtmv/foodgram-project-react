@@ -19,6 +19,8 @@ from .filters import IngredientFilter, RecipeFilter
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет обработки эндпоинтов
+    api/tags/ GET, api/tags/{id}/ GET."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerialiser
@@ -27,6 +29,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет обработки эндпоинтов
+    api/ingredients/ GET, api/ingredients/{id}/ GET."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -37,6 +41,12 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Вьюсет обработки эндпоинтов
+    api/recipes/ GET, POST,
+    api/recipes/{id}/ GET, PATCH, DELETE,
+    api/recipes/download_shopping_cart/ GET,
+    api/recipes/{id}/shopping_cart/ POST, DELETE,
+    api/recipes/{id}/favorite/ POST, DELETE."""
 
     queryset = Recipe.objects.all()
     http_method_names = ['get', 'post', 'patch', 'delete']

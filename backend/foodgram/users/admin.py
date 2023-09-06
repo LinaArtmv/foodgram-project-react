@@ -3,9 +3,8 @@ from .models import User, Subscription
 
 
 class SubscriptionAdmin(admin.ModelAdmin):
-    """
-    Админ-зона подписок.
-    """
+    """ Админ-зона подписок."""
+
     list_display = ('user', 'author')
     list_filter = ('author',)
     search_fields = ('user',)
