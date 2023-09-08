@@ -1,0 +1,1 @@
+[{"model": "recipes.ingredient", "pk": 1, "fields": {"name": "Капуста", "measurement_unit": "кг"}}, {"model": "recipes.ingredient", "pk": 2, "fields": {"name": "Морковь", "measurement_unit": "кг"}}]

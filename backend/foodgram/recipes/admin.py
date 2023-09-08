@@ -18,6 +18,7 @@ class TagsInline(admin.TabularInline):
     extra = 3
 
 
+@admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     """Админ-зона избранных рецептов."""
 
@@ -26,6 +27,7 @@ class FavoriteAdmin(admin.ModelAdmin):
     search_fields = ('user',)
 
 
+@admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     """Админ-зона списка покупок."""
 
@@ -34,6 +36,7 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     search_fields = ('user',)
 
 
+@admin.register(IngredientRecipe)
 class IngredientRecipeAdmin(admin.ModelAdmin):
     """Админ-зона ингредиентов для рецептов."""
 
@@ -42,6 +45,7 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Админ-зона рецептов."""
 
@@ -59,6 +63,7 @@ class RecipeAdmin(admin.ModelAdmin):
     in_favorite.short_description = 'Добавленные рецепты в избранное'
 
 
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """Админ-зона тегов."""
 
@@ -67,17 +72,10 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     """Админ-зона ингридиентов."""
 
     list_display = ('name', 'measurement_unit')
     list_filter = ('name',)
     search_fields = ('name',)
-
-
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(IngredientRecipe, IngredientRecipeAdmin)
-admin.site.register(Favorite, FavoriteAdmin)
-admin.site.register(ShoppingCart, ShoppingCartAdmin)

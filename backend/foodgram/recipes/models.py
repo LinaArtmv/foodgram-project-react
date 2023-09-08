@@ -1,5 +1,5 @@
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-
 from users.models import User
 
 
@@ -8,15 +8,24 @@ class Tag(models.Model):
 
     name = models.CharField('Название',
                             max_length=200,
-                            unique=True)
+                            unique=True,
+                            validators=[RegexValidator(
+                                regex='^[A-Za-z]+$'
+                            )])
     color = models.CharField('Цвет в HEX',
                              max_length=7,
                              default='null',
-                             unique=True)
+                             unique=True,
+                             validators=[RegexValidator(
+                                regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
+                             )])
     slug = models.SlugField('Уникальный слаг',
                             max_length=200,
                             unique=True,
-                            default='null')
+                            default='null',
+                            validators=[RegexValidator(
+                                regex='^[-a-zA-Z0-9_]+$'
+                             )])
 
     class Meta:
         verbose_name = 'тег'
@@ -63,11 +72,12 @@ class Recipe(models.Model):
     name = models.CharField('Название блюда',
                             max_length=200)
     image = models.ImageField('Фото блюда',
-                              upload_to='media/',
                               blank=True)
     text = models.TextField('Описание')
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления (мин)')
+        'Время приготовления (мин)',
+        validators=[MinValueValidator(limit_value=1,
+                                      message='Время должно быть больше 0!')])
 
     class Meta:
         verbose_name = 'рецепт'
@@ -100,7 +110,10 @@ class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(Ingredient,
                                    related_name='ingredient_recipe',
                                    on_delete=models.CASCADE)
-    amount = models.PositiveSmallIntegerField('Количество')
+    amount = models.PositiveSmallIntegerField(
+        'Количество',
+        validators=[MinValueValidator(limit_value=1,
+                                      message='Введите значение больше 0!')])
 
     class Meta:
         constraints = [
