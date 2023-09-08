@@ -14,7 +14,7 @@ from .permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeReadSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, SubscriptionSerializer,
-                          TagSerialiser)
+                          TagSerialiser, SubscriptionsSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -122,11 +122,11 @@ class CustomUserViewSet(UserViewSet):
             detail=False,
             permission_classes=(permissions.IsAuthenticated,))
     def subscriptions(self, request):
-        subscriptions = Subscription.objects.filter(user=self.request.user)
-        pages = self.paginate_queryset(subscriptions)
-        serializer = SubscriptionSerializer(pages,
-                                            many=True,
-                                            context={'request': request})
+        queryset = User.objects.filter(follower__user=request.user)
+        pages = self.paginate_queryset(queryset)
+        serializer = SubscriptionsSerializer(pages,
+                                             many=True,
+                                             context={'request': request})
         return self.get_paginated_response(serializer.data)
 
     @action(methods=['post', 'delete'],

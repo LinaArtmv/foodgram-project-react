@@ -215,7 +215,7 @@ class SubscritionRecipeSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Subscription."""
+    """Сериализатор модели Subscription, методы POST и DELETE."""
 
     id = serializers.ReadOnlyField(source='author.id')
     email = serializers.ReadOnlyField(source='author.email')
@@ -234,7 +234,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         recipes_limit = request.query_params.get('recipes_limit')
-        recipes = obj.author.recipes
+        recipes = obj.author.recipes.all()
         if recipes_limit:
             recipes = recipes[:int(recipes_limit)]
         serializer = SubscritionRecipeSerializer(recipes,
@@ -263,6 +263,37 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         model = Subscription
         fields = ('id', 'email', 'username', 'first_name', 'last_name',
                   'recipes', 'is_subscribed', 'recipes_count')
+
+
+class SubscriptionsSerializer(serializers.ModelSerializer):
+    """Список авторов на которых подписан пользователь."""
+
+    is_subscribed = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        return Subscription.objects.filter(user=user,
+                                           author=obj).exists()
+
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        recipes_limit = request.query_params.get('recipes_limit')
+        recipes = obj.recipes.all()
+        if recipes_limit:
+            recipes = recipes[:int(recipes_limit)]
+        serializer = SubscritionRecipeSerializer(recipes,
+                                                 many=True)
+        return serializer.data
+
+    class Meta:
+        model = User
+        fields = ('email', 'id', 'username', 'first_name',
+                  'last_name', 'is_subscribed', 'recipes', 'recipes_count')
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
