@@ -17,15 +17,13 @@ class Tag(models.Model):
                              default='null',
                              unique=True,
                              validators=[RegexValidator(
-                                regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-                             )])
+                                 regex='^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$')])
     slug = models.SlugField('Уникальный слаг',
                             max_length=200,
                             unique=True,
                             default='null',
                             validators=[RegexValidator(
-                                regex='^[-a-zA-Z0-9_]+$'
-                             )])
+                                regex='^[-a-zA-Z0-9_]+$')])
 
     class Meta:
         verbose_name = 'тег'

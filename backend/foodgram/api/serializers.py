@@ -131,14 +131,12 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def validate_tags(self, value):
         if not value:
             raise serializers.ValidationError(
-                {'ingredients': 'Выбери хотя бы один тег!'}
-                )
+                {'ingredients': 'Выбери хотя бы один тег!'})
         tag_list = []
         for tag in value:
             if tag in tag_list:
                 raise serializers.ValidationError(
-                    {'tags': 'Теги не должны повторяться!'}
-                    )
+                    {'tags': 'Теги не должны повторяться!'})
             tag_list.append(tag)
         return value
 
@@ -146,19 +144,16 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ingredients = value
         if not ingredients:
             raise serializers.ValidationError(
-                {'ingredients': 'Нужно выбрать ингредиент!'}
-                )
+                {'ingredients': 'Нужно выбрать ингредиент!'})
         ingredients_list = []
         for dict in ingredients:
             ingredient = get_object_or_404(Ingredient, name=dict['id'])
             if ingredient in ingredients_list:
                 raise serializers.ValidationError(
-                    {'ingredients': 'Ингридиенты повторяются!'}
-                    )
+                    {'ingredients': 'Ингридиенты повторяются!'})
             if dict['amount'] <= 0:
                 raise serializers.ValidationError(
-                    {'amount': 'Количество должно быть больше 0!'}
-                    )
+                    {'amount': 'Количество должно быть больше 0!'})
             if not ('id' and 'amount'):
                 raise KeyError('Отсутствует обязательное поле')
             ingredients_list.append(ingredient)
@@ -250,13 +245,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         if user.follower.filter(author=author).exists():
             raise serializers.ValidationError(
                 detail='Вы уже подписаны на этого автора!',
-                code=status.HTTP_400_BAD_REQUEST,
-                )
+                code=status.HTTP_400_BAD_REQUEST,)
         if user == author:
             raise serializers.ValidationError(
                 detail='Нельзя подписаться на себя!',
-                code=status.HTTP_400_BAD_REQUEST,
-                )
+                code=status.HTTP_400_BAD_REQUEST,)
         return data
 
     class Meta:
