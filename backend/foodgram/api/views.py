@@ -14,7 +14,7 @@ from .permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeReadSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, SubscriptionSerializer,
-                          TagSerialiser, SubscriptionsSerializer)
+                          SubscriptionsSerializer, TagSerialiser)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
