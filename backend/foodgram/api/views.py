@@ -18,7 +18,7 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет для TagSerialiser."""
+    """Вьюсет для TaSerialiser."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerialiser
