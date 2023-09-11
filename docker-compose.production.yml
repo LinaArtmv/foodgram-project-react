@@ -1,0 +1,43 @@
+version: '3.3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+
+  db:
+    image: postgres:13
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file: .env
+
+  backend:
+    image: linaart/foodgram-project-react_backend
+    volumes:
+      - static:/backend_static
+      - media:/media
+    env_file: .env
+    depends_on:
+      - db
+
+  frontend:
+    image: linaart/foodgram-project-react_frontend
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static:/frontend_static
+    env_file: .env
+    depends_on:
+      - backend
+
+  gateway:
+    image: linaart/foodgram-project-react_gateway
+    volumes:
+      - static:/staticfiles/
+      - media:/media
+    env_file: .env
+    ports:
+      - 8080:80
+    depends_on:
+      - frontend
