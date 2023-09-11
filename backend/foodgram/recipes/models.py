@@ -4,7 +4,7 @@ from users.models import User
 
 
 class Tag(models.Model):
-    """Модель тегов."""
+    """Модель для тегов."""
 
     name = models.CharField('Название',
                             max_length=200,
