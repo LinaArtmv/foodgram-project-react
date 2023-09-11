@@ -38,7 +38,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Вьюсет для RecipeReadSerializer - чтение данных,
+    """Вьюсет для RecipeReadSerializer - чтение,
     RecipeWriteSerializer - запись данных."""
 
     queryset = Recipe.objects.all()
