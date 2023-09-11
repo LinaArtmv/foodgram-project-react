@@ -17,6 +17,7 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
                           SubscriptionsSerializer, TagSerialiser)
 
 
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для TagSerialiser."""
 
