@@ -55,7 +55,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
 
-    def post_delete_methods(self, request, model, serializer, pk):
+    def _post_delete_methods(self, request, model, serializer, pk):
         user = self.request.user
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
@@ -102,7 +102,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def shopping_cart(self, request, pk):
         shopping_cart = ShoppingCart
         serializer = ShoppingCartSerializer
-        return self.post_delete_methods(request, shopping_cart, serializer, pk)
+        return self._post_delete_methods(request,
+                                         shopping_cart,
+                                         serializer,
+                                         pk)
 
     @action(methods=['post', 'delete'],
             detail=True,
@@ -110,7 +113,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, pk):
         favorite = Favorite
         serializer = FavoriteSerializer
-        return self.post_delete_methods(request, favorite, serializer, pk)
+        return self._post_delete_methods(request, favorite, serializer, pk)
 
 
 class CustomUserViewSet(UserViewSet):

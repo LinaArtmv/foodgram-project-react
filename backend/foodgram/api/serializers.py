@@ -159,7 +159,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ingredients_list.append(ingredient)
         return value
 
-    def create_ingredient(self, ingredients, recipe):
+    def _create_ingredient(self, ingredients, recipe):
         IngredientRecipe.objects.bulk_create([
             IngredientRecipe(
                 recipe=recipe,
@@ -168,15 +168,19 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ) for ingredient in ingredients])
         return
 
+    def _tags_and_ingredients_exists(self, tags, ingredients):
+        if not (tags or ingredients):
+            raise serializers.ValidationError(
+                'Выберите хотя бы одно значение!')
+
     @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        if not (tags or ingredients):
-            raise KeyError('Выберите хотя бы одно значение!')
+        self._tags_and_ingredients_exists(tags, ingredients)
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        self.create_ingredient(ingredients, recipe)
+        self._create_ingredient(ingredients, recipe)
         return recipe
 
     @transaction.atomic
@@ -186,7 +190,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         instance.tags.set(tags)
         ingredients = validated_data.pop('ingredients')
         instance.ingredients.clear()
-        self.create_ingredient(ingredients, instance)
+        self._create_ingredient(ingredients, instance)
         instance.save()
         return instance
 
