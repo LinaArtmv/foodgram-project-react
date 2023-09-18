@@ -159,6 +159,20 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ingredients_list.append(ingredient)
         return value
 
+    def validate(self, data):
+        tags = data['tags']
+        ingredients = data['ingredients']
+        name = data['name']
+        text = data['text']
+        if not (tags or ingredients):
+            raise serializers.ValidationError(
+                'Выберите хотя бы одно значение!')
+        if Recipe.objects.filter(name=name,
+                                 text=text).exists():
+            raise serializers.ValidationError(
+                'Такой рецепт уже есть!')
+        return data
+
     def _create_ingredient(self, ingredients, recipe):
         IngredientRecipe.objects.bulk_create([
             IngredientRecipe(
@@ -168,16 +182,10 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ) for ingredient in ingredients])
         return
 
-    def _tags_and_ingredients_exists(self, tags, ingredients):
-        if not (tags or ingredients):
-            raise serializers.ValidationError(
-                'Выберите хотя бы одно значение!')
-
     @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        self._tags_and_ingredients_exists(tags, ingredients)
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
         self._create_ingredient(ingredients, recipe)
@@ -329,8 +337,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         recipe = self.context.get('recipe')
         if user.favorites.filter(recipe=recipe).exists():
             raise serializers.ValidationError(
-                'Рецепт уже добавлен в избранное'
-            )
+                'Рецепт уже добавлен в избранное')
         return data
 
     class Meta:

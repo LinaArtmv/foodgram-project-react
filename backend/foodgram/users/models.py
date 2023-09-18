@@ -22,6 +22,12 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'password', 'first_name', 'last_name']
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['email', 'username'],
+                name='unique_email_username'
+            )
+        ]
         ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

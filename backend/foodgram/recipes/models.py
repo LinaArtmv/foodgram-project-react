@@ -10,7 +10,7 @@ class Tag(models.Model):
                             max_length=200,
                             unique=True,
                             validators=[RegexValidator(
-                                regex='^[A-Za-z]+$'
+                                regex='^[А-Яа-я]+$'
                             )])
     color = models.CharField('Цвет в HEX',
                              max_length=7,
@@ -78,6 +78,13 @@ class Recipe(models.Model):
                                       message='Время должно быть больше 0!')])
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'text'],
+                name='unique_name_text'
+            )
+        ]
+        ordering = ['-id']
         verbose_name = 'рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -170,7 +177,7 @@ class ShoppingCart(models.Model):
         verbose_name_plural = 'Список покупок'
         constraints = [models.UniqueConstraint(
             fields=['user', 'recipe'],
-            name='unique_cart')]
+            name='unique_shopping_cart')]
 
     def __str__(self):
         return f'{self.recipe}'
