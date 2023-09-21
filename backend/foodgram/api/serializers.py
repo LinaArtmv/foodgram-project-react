@@ -170,7 +170,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         if Recipe.objects.filter(name=name,
                                  text=text).exists():
             raise serializers.ValidationError(
-                'Такой рецепт уже есть!')
+                'Такой рецепт уже есть, измените название или описание!')
         return data
 
     def _create_ingredient(self, ingredients, recipe):
