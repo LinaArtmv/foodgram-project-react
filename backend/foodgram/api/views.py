@@ -12,9 +12,10 @@ from users.models import Subscription, User
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsOwnerOrAdminOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
-                          RecipeReadSerializer, RecipeWriteSerializer,
-                          ShoppingCartSerializer, SubscriptionSerializer,
-                          SubscriptionsSerializer, TagSerialiser)
+                          RecipeCreateSerializer, RecipeReadSerializer,
+                          RecipeUpdateSerializer, ShoppingCartSerializer,
+                          SubscriptionSerializer, SubscriptionsSerializer,
+                          TagSerialiser)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -50,7 +51,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return RecipeReadSerializer
-        return RecipeWriteSerializer
+        if self.action in ('update', 'partial_update'):
+            return RecipeUpdateSerializer
+        return RecipeCreateSerializer
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)

@@ -159,6 +159,29 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ingredients_list.append(ingredient)
         return value
 
+    def _create_ingredient(self, ingredients, recipe):
+        IngredientRecipe.objects.bulk_create([
+            IngredientRecipe(
+                recipe=recipe,
+                ingredient=ingredient['id'],
+                amount=ingredient['amount']
+            ) for ingredient in ingredients])
+        return
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        return RecipeReadSerializer(instance,
+                                    context={'request': request}).data
+
+    class Meta:
+        model = Recipe
+        fields = ('tags', 'ingredients', 'image',
+                  'name', 'text', 'cooking_time')
+
+
+class RecipeCreateSerializer(RecipeWriteSerializer):
+    """Сериализатор для создания рецепта."""
+
     def validate(self, data):
         tags = data['tags']
         ingredients = data['ingredients']
@@ -173,15 +196,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 'Такой рецепт уже есть, измените название или описание!')
         return data
 
-    def _create_ingredient(self, ingredients, recipe):
-        IngredientRecipe.objects.bulk_create([
-            IngredientRecipe(
-                recipe=recipe,
-                ingredient=ingredient['id'],
-                amount=ingredient['amount']
-            ) for ingredient in ingredients])
-        return
-
     @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
@@ -190,6 +204,10 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
         self._create_ingredient(ingredients, recipe)
         return recipe
+
+
+class RecipeUpdateSerializer(RecipeWriteSerializer):
+    """Сериализатор для обновления рецепта."""
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -201,16 +219,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         self._create_ingredient(ingredients, instance)
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        request = self.context.get('request')
-        return RecipeReadSerializer(instance,
-                                    context={'request': request}).data
-
-    class Meta:
-        model = Recipe
-        fields = ('tags', 'ingredients', 'image',
-                  'name', 'text', 'cooking_time')
 
 
 class SubscritionRecipeSerializer(serializers.ModelSerializer):
